@@ -1,7 +1,7 @@
 ﻿from dash import Dash, html, dcc, dash_table
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-from callbacks import get_callbacks
+from callbacks import *
 from flask import Flask
 from flask.logging import default_handler
 import logging
@@ -18,14 +18,12 @@ app = Dash(
 	server=server, 
 	external_stylesheets=[
 		dbc.themes.FLATLY, 
-		dbc.icons.FONT_AWESOME,
-		css], 
+		dbc.icons.FONT_AWESOME
+	], 
 	suppress_callback_exceptions=True,  
 	url_base_pathname='/', 
 	serve_locally=True
 )
-
-get_callbacks()
 
 app.title = "Sigrid og Helge sitt kodeprogram"
 server = app.server
@@ -34,17 +32,15 @@ for logger in (app.logger,):
 	logger.setLevel(logging.INFO)
 	logger.addHandler(default_handler)
 
-input_style = {'margin-left': '5px'}
-
 controls_left = dbc.Card([
 	html.Div(
 	    [
 	        dbc.Label("Skriv inn teksten som skal kodes"),
-	        dbc.Input(id="input", size="lg", placeholder="...", type="text"),
+	        dbc.Input(id="text-input", size="lg", placeholder="...", type="text"),
 
 	    ]
 	),
-	dbc.Label("Velg kodetype", style={"margin-top": "15px"}),
+	dbc.Label("Velg kodetype", style={"marginTop": "15px"}),
 	dbc.ButtonGroup(
 				[
 					dbc.RadioItems(
@@ -62,14 +58,14 @@ controls_left = dbc.Card([
 	html.Div(
 	    [
 	        dbc.Label("Første nøkkel"),
-	        dbc.Input(id="key1", size="lg", placeholder="...", type="text", options={"disabled": True}),
+	        dbc.Input(id="key1", size="lg", value="1", type="text"),
 
 	    ]
 	),
 	html.Div(
 	    [
 	        dbc.Label("Andre nøkkel"),
-	        dbc.Input(id="key2", size="lg", placeholder="...", type="text", options={"disabled": True}),
+	        dbc.Input(id="key2", size="lg", value="0", type="text"),
 
 	    ]
 	),
@@ -96,16 +92,12 @@ app.layout = html.Div([
 	dbc.Col(html.H1("Sigrid og Helge sitt kodeprogram", className="text-center"), md=9),
 	dbc.Row(
 		[
-			dbc.Col(
-				dbc.CardGroup(
-					[
-						controls_left,
-		   				controls_right
-					],
-				),
-				md=9
-			)
-	   		
+		dbc.Col(
+				[
+					controls_left,
+	   				controls_right
+				],
+			),
 		],
 	)
 ])
